@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary: #00f2fe;
+        --secondary: #4facfe;
+        --success: #00b09b;
+        --success-alt: #96c93d;
+        --dark-bg: #0b0f19;
+        --card-bg: rgba(255, 255, 255, 0.05);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --text-main: #ffffff;
+        --text-sub: #a0aec0;
+      }
+      
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+        background-attachment: fixed;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 600px;
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        padding: 30px 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+      }
+
+      h2 {
+        text-align: center;
+        font-weight: 800;
+        font-size: 28px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
+      }
+
+      #session-banner {
+        background: rgba(0, 242, 254, 0.1);
+        color: var(--primary);
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 25px;
+        border: 1px solid rgba(0, 242, 254, 0.2);
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
+      }
+
+      #search-box {
+        width: 100%;
+        padding: 16px 20px;
+        margin-bottom: 25px;
+        background: rgba(0,0,0,0.2);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        font-size: 16px;
+        color: white;
+        font-family: 'Outfit', sans-serif;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
+
+      #search-box:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+      }
+      
+      #search-box::placeholder {
+        color: #718096;
+      }
+
+      .student-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px;
+        margin-bottom: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      .student-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+
+      .student-info { display: flex; flex-direction: column; }
+      
+      .s-name { font-weight: 600; font-size: 17px; letter-spacing: 0.5px; }
+      .s-roll { font-size: 13px; color: var(--text-sub); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; font-weight: 400;}
+      
+      .btn {
+        background: linear-gradient(45deg, var(--secondary), var(--primary));
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+      }
+
+      .btn:hover:not(:disabled) {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+      }
+
+      .btn:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.3);
+        box-shadow: none;
+        cursor: not-allowed;
+      }
+
+      .btn-present {
+        background: linear-gradient(45deg, var(--success), var(--success-alt)) !important;
+        box-shadow: 0 4px 15px rgba(0, 176, 155, 0.4) !important;
+        color: white !important;
+      }
+
+      /* Glass Modal */
+      #modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      #modal {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        padding: 35px 25px;
+        border-radius: 24px;
+        width: 90%;
+        max-width: 340px;
+        text-align: center;
+        transform: translateY(20px);
+        animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes slideUp {
+        to { transform: translateY(0); }
+      }
+
+      #modal h3 {
+        margin-top: 0;
+        font-size: 22px;
+        color: white;
+        margin-bottom: 10px;
+      }
+
+      #modal p {
+        color: var(--text-sub);
+        font-size: 14px;
+        margin-bottom: 25px;
+        line-height: 1.5;
+      }
+
+      #modal input {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 25px;
+        background: rgba(0,0,0,0.3);
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        font-weight: 800;
+        letter-spacing: 2px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
+
+      #modal input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+      }
+
+      .modal-btns {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+      }
+
+      .modal-btns button {
+        flex: 1;
+        padding: 14px 0;
+      }
+
+      .btn-cancel {
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+      }
+      
+      .btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        box-shadow: none !important;
+      }
+      
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Workshop Check-in</h2>
+      <div id="session-banner">Loading Session...</div>
+      
+      <input type="text" id="search-box" placeholder="Search your Name or Roll No..." onkeyup="filterStudents()">
+      
+      <div id="student-list">
+        <div style="text-align:center; padding: 40px; color:var(--text-sub); font-weight:300;">
+          <svg style="width:40px; height:40px; animation: spin 1s linear infinite; margin-bottom:15px; opacity:0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+          <br>Loading Roster...
+        </div>
+      </div>
+    </div>
+
+    <!-- Code Input Modal -->
+    <div id="modal-overlay">
+      <div id="modal">
+        <h3 id="modal-student-name"></h3>
+        <p>Enter the security code shown on the screen to verify your presence.</p>
+        <input type="text" id="attendance-code" placeholder="ENTER CODE" autocomplete="off">
+        <div class="modal-btns">
+          <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn" id="submit-btn" onclick="submitAttendance()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <script>
+      // Local Mock for Testing outside of Google Apps Script
+      if (typeof google === 'undefined') {
+        window.google = {
+          script: {
+            run: {
+              withSuccessHandler: function(callback) {
+                return {
+                  getStudentsList: function() {
+                    setTimeout(() => {
+                      callback({
+                        session: "Day 1 - Session 1 (LOCAL DEMO)",
+                        students: [
+                          { name: "Gaurang Rane", rollNo: "25CA5001", isPresent: false },
+                          { name: "Alice Smith", rollNo: "25CA5002", isPresent: true },
+                          { name: "Bob Johnson", rollNo: "25CA5003", isPresent: false },
+                          { name: "Charlie Davis", rollNo: "25CA5004", isPresent: false },
+                          { name: "Eve Williams", rollNo: "25CA5005", isPresent: false }
+                        ]
+                      });
+                    }, 800);
+                  },
+                  markAttendance: function(rollNo, code) {
+                    setTimeout(() => {
+                      if(code === "DEMO") {
+                        callback({ success: true, message: "Attendance Marked Successfully!" });
+                      } else {
+                        callback({ success: false, message: "Invalid Code. Try 'DEMO'." });
+                      }
+                    }, 800);
+                  }
+                };
+              }
+            }
+          }
+        };
+      }
+
+      let currentRoll = null;
+
+      // Call backend to get list of students
+      google.script.run.withSuccessHandler(renderData).getStudentsList();
+
+      function renderData(response) {
+        if (response.error) {
+          document.getElementById('session-banner').innerText = response.error;
+          document.getElementById('session-banner').style.background = 'rgba(234, 67, 53, 0.1)';
+          document.getElementById('session-banner').style.color = '#ea4335';
+          document.getElementById('session-banner').style.borderColor = 'rgba(234, 67, 53, 0.2)';
+          document.getElementById('search-box').style.display = 'none';
+          document.getElementById('student-list').innerHTML = '';
+          return;
+        }
+
+        document.getElementById('session-banner').innerText = "Active: " + response.session;
+        
+        let html = '';
+        response.students.forEach(s => {
+          let safeRoll = s.rollNo.replace(/'/g, "\\'");
+          let safeName = s.name.replace(/'/g, "\\'");
+          html += `
+            <div class="student-card" data-search="${s.name.toLowerCase()} ${s.rollNo.toLowerCase()}">
+              <div class="student-info">
+                <span class="s-name">${s.name}</span>
+                <span class="s-roll">${s.rollNo}</span>
+              </div>
+              <button id="btn-${s.rollNo}" class="btn ${s.isPresent ? 'btn-present' : ''}" 
+                ${s.isPresent ? 'disabled' : ''} 
+                onclick="openModal('${safeRoll}', '${safeName}')">
+                ${s.isPresent ? 'PRESENT' : 'Check In'}
+              </button>
+            </div>
+          `;
+        });
+        document.getElementById('student-list').innerHTML = html;
+      }
+
+      function filterStudents() {
+        let query = document.getElementById('search-box').value.toLowerCase();
+        let cards = document.querySelectorAll('.student-card');
+        cards.forEach(card => {
+          if (card.getAttribute('data-search').includes(query)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+
+      function openModal(rollNo, name) {
+        currentRoll = rollNo;
+        document.getElementById('modal-student-name').innerText = name;
+        document.getElementById('attendance-code').value = '';
+        document.getElementById('modal-overlay').style.display = 'flex';
+        document.getElementById('attendance-code').focus();
+      }
+
+      function closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none';
+      }
+
+      function submitAttendance() {
+        let code = document.getElementById('attendance-code').value;
+        if(!code) return alert("Please enter a code.");
+        
+        let btn = document.getElementById('submit-btn');
+        btn.innerText = "Verifying...";
+        btn.disabled = true;
+
+        google.script.run.withSuccessHandler(function(response) {
+          if(response.success) {
+            let presentBtn = document.getElementById('btn-' + currentRoll);
+            presentBtn.className = "btn btn-present";
+            presentBtn.innerText = "PRESENT";
+            presentBtn.disabled = true;
+            closeModal();
+            alert("✨ " + response.message); 
+          } else {
+            alert("❌ " + response.message);
+          }
+          btn.innerText = "Confirm";
+          btn.disabled = false;
+        }).markAttendance(currentRoll, code);
+      }
+    </script>
+  </body>
+</html>

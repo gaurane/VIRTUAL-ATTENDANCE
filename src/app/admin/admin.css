@@ -1,0 +1,228 @@
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 24px;
+  font-size: 22px;
+  font-weight: 800;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-main);
+  background: -webkit-linear-gradient(45deg, var(--secondary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 20px 0;
+  margin: 0;
+  flex: 1;
+}
+
+.sidebar-menu li {
+  padding: 0 15px;
+  margin-bottom: 8px;
+}
+
+.sidebar-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.sidebar-menu button:hover, .sidebar-menu button.active {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--primary);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.topbar {
+  height: 80px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+}
+
+.topbar h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.content-area {
+  padding: 40px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Grid & Panels */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-bottom: 35px;
+}
+
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+}
+
+.metric-title {
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.metric-value {
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.dashboard-row {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 25px;
+  margin-bottom: 35px;
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-sub);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.data-table td {
+  padding: 15px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  color: var(--text-main);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Kiosk Layout */
+.kiosk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.qr-placeholder {
+  background: white;
+  width: 250px;
+  height: 250px;
+  margin: 0 auto;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-weight: bold;
+}
+
+.code-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Print Styles */
+@media print {
+  .sidebar, .topbar, .actions, .btn {
+    display: none !important;
+  }
+  .main-content {
+    background: white;
+    color: black;
+  }
+  .tab-container {
+    height: auto;
+  }
+  .content-area {
+    padding: 0;
+    overflow: visible;
+  }
+  .data-table th, .data-table td {
+    border-color: #ddd;
+    color: black;
+  }
+  .badge {
+    border: 1px solid #ccc;
+    color: black;
+    background: transparent;
+  }
+}
